@@ -30,9 +30,38 @@
                                                            `~\  |
 
 
-Rainbowcat reads files that got passed as arguments or from standard input and prints that content to standard output.
-Usage: rainbowcat [--pastel | --help | filename/s]
+RAINBOWCAT(1)                                                                       User Commands                                                                         RAINBOWCAT(1)
 
-		--help			help
-		--pastel		changes the output colorscheme to pastel colors
+NAME
+       rainbowcat - concatenate files and print on the standard output
+
+SYNOPSIS
+       rainbowcat [OPTION]... [FILE]...
+
+DESCRIPTION
+       Concatenate FILE(s) to standard output.
+
+       With no FILE read standard input.
+
+       --help
+              displays help information
+
+       --pastel
+              displays the output in pastel colors
+
+       --frequency [VALUE]
+              changes the frequency to VALUE
+
+EXAMPLES
+       rainbowcat kittens.txt colors.txt rainbowcat.txt
+              Output kittens.txt's, color.txt's and rainbowcat.txt's contents in default colors.
+
+       rainbowcat --pastel rainbowcat.txt
+              Output rainbowcat.txt's contents in pastel colors.
+
+       rainbowcat --frequency 1 rainbowcat.txt
+              Output rainbowcat.txt's contents in a low frequency (colorchanges occur less often) to standard output.
+
+AUTHOR
+       Written by C. Michele Delaney.
 
