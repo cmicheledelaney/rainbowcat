@@ -9,7 +9,7 @@ FLAGS = -Wall -Wextra -Werror
 INC= -I./includes
 
 $(NAME): $(LIB)
-	@gcc $(FLAGS) $(INC) $(SRC) -o $(NAME);
+	@gcc $(FLAGS) $(INC) $(SRC) -o $(NAME) -lm;
 	@echo compiling rainbowcat
 
 all: $(NAME)
