@@ -56,6 +56,8 @@ int		cat(FILE *file)
 	sin_wave = get_rainbow();
 	i = 0;
 	up = 1;
+	size = 10;
+	line = (char *)malloc(sizeof(char) * (size + 1));
 	while ((reading = getline(&line, &size, file)) != -1)
 	{
 		line[reading] = '\0';
@@ -92,30 +94,28 @@ int		check_colorscheme(char *colorscheme)
 
 int		main(int argc, char **argv)
 {
-	char	*filename;
 	FILE	*file;
 
 	argv[argc] = NULL;
-	if (argc < 2)
-		file = stdin;
-	for (int i = 1; argv[i]; i++)
+	for (int i = 1; i < argc; i++)
 	{
-		if (check_colorscheme(argv[1]))
+		if (check_colorscheme(argv[i]))
 			i++;
+		if (argv[i] == NULL)
+			fprintf(stderr, "usage: ./rainbowcat [--pastel | --help | file/s]");
 		if (strcmp(argv[i], "--help") == 0)
 			argv[i] = ".help";
-		filename = argv[i];
-		if ((file = fopen(filename, "r")) == NULL)
+		if ((file = fopen(argv[i], "r")) == NULL)
 		{
-			perror("rainbowcat: ");
-			return (-1);
+			perror(argv[i]);
+			continue;
 		}
 		cat(file);
 		argc > 2 && i < argc - 1 ? printf("\n") : 0;
 		if (fclose(file) == -1)
 		{
-			perror("rainbowcat: ");
-			return (-1);
+			perror(argv[i]);
+			continue;
 		}
 	}
 	return (0);

@@ -30,7 +30,7 @@
                                                            `~\  |
 
 
-Rainbowcat prints files that got passed as arguments or redirected to standard input.
+Rainbowcat prints files that got passed as arguments.
 Usage: rainbowcat [--pastel | --help | filename/s]
 
 		--help			help
