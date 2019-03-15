@@ -161,5 +161,6 @@ int		main(int argc, char **argv)
 			continue;
 		}
 	}
+	printf("%s", RESET);
 	return (0);
 }

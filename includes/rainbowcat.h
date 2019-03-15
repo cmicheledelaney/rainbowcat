@@ -13,3 +13,4 @@
 #define PHASE1 0
 #define PHASE2 2
 #define PHASE3 4
+#define RESET "\033[0m"
