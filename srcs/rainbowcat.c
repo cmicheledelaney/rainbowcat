@@ -1,6 +1,7 @@
 #include "rainbowcat.h"
 
 int		width, center;
+float	frequency;
 
 /*
 ** produces strings with the 256 colorcodes available.
@@ -48,9 +49,9 @@ int *get_rainbow(void)
 	wave = (int *)malloc(sizeof(int) * LEN);
 	for (int i = 0; i < LEN; ++i)
 	{
-		red = (sin(FREQUENCY * i + PHASE1) * width + center) / 52;
-		grn = (sin(FREQUENCY * i + PHASE2) * width + center) / 52;
-		blu = (sin(FREQUENCY * i + PHASE3) * width + center) / 52;
+		red = (sin(frequency * i + PHASE1) * width + center) / 52;
+		grn = (sin(frequency * i + PHASE2) * width + center) / 52;
+		blu = (sin(frequency * i + PHASE3) * width + center) / 52;
 		rgb = 16 + 36 * red + 6 * grn + blu;
 		wave[i] = rgb;
 	}
@@ -62,30 +63,27 @@ int *get_rainbow(void)
 ** 256 colorcodes, sin_wave contains a sin wave of the rgb values that
 ** produces a rainbow color transition.
 */
-int		cat(FILE *file)
+int		cat(FILE *file, char **colorcodes)
 {
 	char	*line;
-	char	**color_codes;
 	int		*sin_wave;
 	size_t	size;
 	int		i, up, reading;
 
 	line = NULL;
-	// gets the array of the 256 color codes
-	color_codes = get_colorcodes();
 	// gets the sin wave to acces the right colorcodes
 	sin_wave = get_rainbow();
 	i = 0;
 	up = 1;
 	// buff size
-	size = 10;
+	size = 1;
 	line = (char *)malloc(sizeof(char) * (size + 1));
 	// reads file line by line
 	while ((reading = getline(&line, &size, file)) != -1)
 	{
 		line[reading] = '\0';
 		// prints each line in the according color
-		printf("%s%s", color_codes[sin_wave[i]], line);
+		printf("%s%s", colorcodes[sin_wave[i]], line);
 		// checks if i has reached the end or the start of the array
 		// and moves in the opposite direction.
 		if (up == 1)
@@ -103,16 +101,26 @@ int		cat(FILE *file)
 }
 
 /*
-** checks if the --pastel flag is on and sets the globals for
+** checks if the --pastel or --frequency flag is on and sets the globals for
 ** the center and the width to the pastel values instead.
 */
-int		check_colorscheme(char *colorscheme)
+int		check_colorscheme(char **argv, int *i, int argc)
 {
-	if (strcmp(colorscheme, "--pastel") == 0)
+	while (*i <= argc && (strcmp(argv[*i], "--pastel") == 0 || strcmp(argv[*i], "--frequency") == 0))
 	{
-		width = WIDTH_PASTEL;
-		center = CENTER_PASTEL;
-		return (1);
+		if (strcmp(argv[*i], "--pastel") == 0)
+		{
+			width = WIDTH_PASTEL;
+			center = CENTER_PASTEL;
+			*i = *i + 1;
+			return (1);
+		}
+		if (strcmp(argv[*i], "--frequency") == 0)
+		{
+			frequency = (float)(argv[*i + 1][0] - '0') / 10;
+			*i = *i + 2;
+			return (1);
+		}
 	}
 	return (0);
 }
@@ -120,47 +128,53 @@ int		check_colorscheme(char *colorscheme)
 int		main(int argc, char **argv)
 {
 	FILE	*file;
+	char	**colorcodes;
 
 	argv[argc] = NULL;
 	// sets center and width for the sine wave to the default, which produces
 	// brighter colors
 	center = CENTER;
 	width = WIDTH;
+	frequency = FREQUENCY;
+	// gets the array of the 256 color codes
+	colorcodes = get_colorcodes();
 	// reads from stdin if there are no arguments
 	if (argv[1] == NULL)
-		cat(stdin);
+		cat(stdin, colorcodes);
 	// iterates through the arguments
 	for (int i = 1; i < argc; i++)
 	{
-		// checks if the --pastel flag is on an sets the values accordingly
-		if (check_colorscheme(argv[i]))
-			i++;
+		// checks if the --pastel or --frequency flags are on an sets the values accordingly
+		check_colorscheme(argv, &i, argc);
 		// checks if there is an argument; if not, reads from standard input
 		if (argv[i] == NULL)
 		{
-			cat(stdin);
+			cat(stdin, colorcodes);
+			// resets the color
+			printf("%s", RESET);
 			return (0);
 		}
 		// checks if the --help flag is on and sets the .help file as input
 		if (strcmp(argv[i], "--help") == 0)
 			argv[i] = ".help";
-		// opens the file
+		// opens the file and prints an error message if there was an error
 		if ((file = fopen(argv[i], "r")) == NULL)
 		{
 			perror(argv[i]);
 			continue;
 		}
 		// prints the file
-		cat(file);
+		cat(file, colorcodes);
 		// if there are several files it prints a newline in between
 		argc > 2 && i < argc - 1 ? printf("\n") : 0;
-		// closes the filedescriptor
+		// closes the filedescriptor and prints an error message if there was an error
 		if (fclose(file) == -1)
 		{
 			perror(argv[i]);
 			continue;
 		}
 	}
+	// resets the color
 	printf("%s", RESET);
 	return (0);
 }
