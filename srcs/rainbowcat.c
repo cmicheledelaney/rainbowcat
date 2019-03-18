@@ -58,6 +58,7 @@ int *get_rainbow(void)
 	return (wave);
 }
 
+
 /*
 ** reads the file line by line and prints it. color_codes contains all the
 ** 256 colorcodes, sin_wave contains a sin wave of the rgb values that
@@ -154,9 +155,12 @@ int		main(int argc, char **argv)
 			printf("%s", RESET);
 			return (0);
 		}
-		// checks if the --help flag is on and sets the .help file as input
+		// checks if the --help flag is on and prints HELP
 		if (strcmp(argv[i], "--help") == 0)
-			argv[i] = ".help";
+		{
+			printf(HELP);
+			return (0);
+		}
 		// opens the file and prints an error message if there was an error
 		if ((file = fopen(argv[i], "r")) == NULL)
 		{
@@ -173,8 +177,8 @@ int		main(int argc, char **argv)
 			perror(argv[i]);
 			continue;
 		}
+		// resets the color
+		printf("%s", RESET);
 	}
-	// resets the color
-	printf("%s", RESET);
 	return (0);
 }
