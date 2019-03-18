@@ -46,7 +46,7 @@ char *HELP = "                     ;,_\n\
                                                            `~\\  |\n\
 \n\
 \n\
-RAINBOWCAT(1)                                                                       User Commands                                                                         RAINBOWCAT(1)\n\
+RAINBOWCAT(1)\n\
 \n\
 NAME\n\
        rainbowcat - concatenate files and print on the standard output\n\
