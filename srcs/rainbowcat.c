@@ -158,7 +158,7 @@ int		main(int argc, char **argv)
 		// checks if the --help flag is on and prints HELP
 		if (strcmp(argv[i], "--help") == 0)
 		{
-			printf(HELP);
+			printf("%s", HELP);
 			return (0);
 		}
 		// opens the file and prints an error message if there was an error
