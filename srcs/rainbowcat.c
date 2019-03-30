@@ -14,7 +14,7 @@ char	**get_colorcodes(void)
 
 	// this is the default color code. We only need to change the last
 	// three digits before 'm'.
-	code = "\033[01;38;5;000m";
+	code = "\033[0;38;5;000m";
 	colorcodes = (char **)malloc(sizeof(char *) * 256);
 	for (int i = 0; i < 256; i++)
 	{
